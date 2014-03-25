@@ -1,5 +1,5 @@
 AnimatedGIFImageSerialization
-======================
+=============================
 
 `AnimatedGIFImageSerialization` decodes an `UIImage` from [Animated GIFs](http://en.wikipedia.org/wiki/Graphics_Interchange_Format) image data, following the API conventions of Foundation's `NSJSONSerialization` class.
 
