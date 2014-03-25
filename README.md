@@ -14,6 +14,8 @@ UIImageView *imageView = ...;
 imageView.image = [UIImage imageNamed:@"animated.gif"];
 ```
 
+![Animated GIF](https://raw.githubusercontent.com/mattt/AnimatedGIFImageSerialization/master/Example/Animated%20GIF%20Example/animated.gif)
+
 ---
 
 ## Contact
