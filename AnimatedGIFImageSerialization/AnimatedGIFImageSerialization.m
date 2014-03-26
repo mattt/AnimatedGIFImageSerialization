@@ -160,7 +160,10 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
     if (path) {
         NSData *data = [NSData dataWithContentsOfFile:path];
         if (AnimatedGifDataIsValid(data)) {
-            return [AnimatedGIFImageSerialization imageWithData:data error:nil];
+            if ([[name stringByDeletingPathExtension] hasSuffix:@"@2x"]) {
+                return [AnimatedGIFImageSerialization imageWithData:data scale:2.0f duration:0.0f error:nil];
+            } else
+                return [AnimatedGIFImageSerialization imageWithData:data error:nil];
         }
     }
 
