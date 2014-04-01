@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#import "AnimatedGIFImageSerialization.h"
+
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-
-#import "AnimatedGIFImageSerialization.h"
 
 NSString * const AnimatedGIFImageErrorDomain = @"com.compuserve.gif.image.error";
 
@@ -39,7 +39,7 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
         }
 
         NSMutableDictionary *mutableOptions = [NSMutableDictionary dictionary];
-        [mutableOptions setObject:[NSNumber numberWithBool:kCFBooleanTrue] forKey:(NSString *)kCGImageSourceShouldCache];
+        [mutableOptions setObject:@(YES) forKey:(NSString *)kCGImageSourceShouldCache];
         [mutableOptions setObject:(NSString *)kUTTypeGIF forKey:(NSString *)kCGImageSourceTypeIdentifierHint];
 
         CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)data, (__bridge CFDictionaryRef)mutableOptions);

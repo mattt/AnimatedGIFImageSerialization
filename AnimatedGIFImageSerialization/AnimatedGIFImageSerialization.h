@@ -26,8 +26,6 @@
 
 #import <UIKit/UIKit.h>
 
-/// Decoding Animated GIF Image Data
-
 /**
  
  */
@@ -38,7 +36,7 @@ extern __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData
  */
 extern __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data, CGFloat scale, NSTimeInterval duration, NSError * __autoreleasing *error);
 
-/// Encoding Animated GIF Image Data
+#pragma mark -
 
 ///**
 // 
@@ -57,7 +55,7 @@ extern __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData
  */
 @interface AnimatedGIFImageSerialization : NSObject
 
-/// Creating an Animated GIF
+/// @name Creating an Animated GIF
 
 /**
 
@@ -73,7 +71,7 @@ extern __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData
                   duration:(NSTimeInterval)duration
                      error:(NSError * __autoreleasing *)error;
 
-/// Creating Animated Gif Data
+/// @name Creating Animated Gif Data
 
 ///**
 //
