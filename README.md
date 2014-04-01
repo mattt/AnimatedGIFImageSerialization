@@ -3,7 +3,7 @@ AnimatedGIFImageSerialization
 
 `AnimatedGIFImageSerialization` decodes an `UIImage` from [Animated GIFs](http://en.wikipedia.org/wiki/Graphics_Interchange_Format) image data, following the API conventions of Foundation's `NSJSONSerialization` class.
 
-Out of the box, `UIImage` does not support decoding animated gifs into an animated `UIImage`. So long as `ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING` is not `#define`'d, the this library will swizzle the `UIImage` initializers to support animated GIFs.
+As it ships with iOS, `UIImage` does not support decoding animated gifs into an animated `UIImage`. But so long as `ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING` is not `#define`'d, the this library will swizzle the `UIImage` initializers to automatically support animated GIFs.
 
 ## Usage
 
