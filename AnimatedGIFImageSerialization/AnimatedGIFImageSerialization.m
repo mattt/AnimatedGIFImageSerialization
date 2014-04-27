@@ -82,13 +82,48 @@ static BOOL AnimatedGifDataIsValid(NSData *data) {
     return NO;
 }
 
-//__attribute__((overloadable)) NSData * UIImageAnimatedGifRepresentation(UIImage *image) {
-//    return UIImageAnimatedGifRepresentation(image, 0.0f, nil);
-//}
+__attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image, NSTimeInterval duration, NSInteger loopCount, NSError * __autoreleasing *error) {
+    NSDictionary *userInfo = nil;
+    {
+        if (!image.images) {
+            return nil;
+        }
+        
+        size_t frameCount = image.images.count;
+        NSMutableData *animatedGIFData = [NSMutableData data];
+        NSDictionary *imageProperties = @{ (__bridge id)kCGImagePropertyGIFDictionary: @{ (__bridge id)kCGImagePropertyGIFLoopCount: @(loopCount) } };
+        CGImageDestinationRef target = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)animatedGIFData, kUTTypeGIF, frameCount, NULL);
+        CGImageDestinationSetProperties(target, (__bridge CFDictionaryRef)imageProperties);
+        
+        float frameDuration = (duration <= 0 ? image.duration / frameCount : duration / frameCount);
+        NSDictionary *frameProperties = @{
+            (__bridge id)kCGImagePropertyGIFDictionary: @{
+                (__bridge id)kCGImagePropertyGIFDelayTime: @(frameDuration)
+            }
+        };
+        
+        for (size_t idx = 0; idx < image.images.count; idx++) {
+            CGImageDestinationAddImage(target, [[image.images objectAtIndex:idx] CGImage], (__bridge CFDictionaryRef)frameProperties);
+        }
+        
+        BOOL success = CGImageDestinationFinalize(target);
+        CFRelease(target);
+        if (success) {
+            return [NSData dataWithData:animatedGIFData];
+        }
+    }
+    _error: {
+        if (error) {
+            *error = [[NSError alloc] initWithDomain:AnimatedGIFImageErrorDomain code:-1 userInfo:userInfo];
+        }
+        
+        return nil;
+    }
+}
 
-//__attribute__((overloadable)) NSData * UIImageAnimatedGifRepresentation(UIImage *image, NSTimeInterval duration, NSError * __autoreleasing *error) {
-//
-//}
+__attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image) {
+    return UIImageAnimatedGIFRepresentation(image, 0.0f, 0, nil);
+}
 
 @implementation AnimatedGIFImageSerialization
 
@@ -108,18 +143,19 @@ static BOOL AnimatedGifDataIsValid(NSData *data) {
 
 #pragma mark -
 
-//+ (NSData *)dataWithImage:(UIImage *)image
-//                    error:(NSError * __autoreleasing *)error
-//{
-//    return [self dataWithImage:image duration:0.0f error:error];
-//}
++ (NSData *)animatedGIFDataWithImage:(UIImage *)image
+                               error:(NSError * __autoreleasing *)error
+{
+    return [self animatedGIFDataWithImage:image duration:0.0f loopCount:0 error:error];
+}
 
-//+ (NSData *)dataWithImage:(UIImage *)image
-//                 duration:(NSTimeInterval)duration
-//                    error:(NSError * __autoreleasing *)error
-//{
-//    return UIImageAnimatedGifRepresentation(image, duration, error);
-//}
++ (NSData *)animatedGIFDataWithImage:(UIImage *)image
+                            duration:(NSTimeInterval)duration
+                           loopCount:(NSInteger)loopCount
+                               error:(NSError *__autoreleasing *)error
+{
+    return UIImageAnimatedGIFRepresentation(image, duration, loopCount, error);
+}
 
 @end
 
