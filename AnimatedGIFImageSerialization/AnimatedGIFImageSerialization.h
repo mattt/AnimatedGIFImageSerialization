@@ -46,7 +46,7 @@ extern __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(U
 /**
  
  */
-extern __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image, NSTimeInterval duration, NSInteger loopCount, NSError * __autoreleasing *error);
+extern __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image, NSTimeInterval duration, NSUInteger loopCount, NSError * __autoreleasing *error);
 
 #pragma mark -
 
@@ -84,7 +84,7 @@ extern __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(U
  */
 + (NSData *)animatedGIFDataWithImage:(UIImage *)image
                             duration:(NSTimeInterval)duration
-                           loopCount:(NSInteger)loopCount
+                           loopCount:(NSUInteger)loopCount
                                error:(NSError * __autoreleasing *)error;
 
 @end

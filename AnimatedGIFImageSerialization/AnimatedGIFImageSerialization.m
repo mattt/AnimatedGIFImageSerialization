@@ -32,12 +32,12 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data)
 }
 
 __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data, CGFloat scale, NSTimeInterval duration, NSError * __autoreleasing *error) {
+    if (!data) {
+        return nil;
+    }
+
     NSDictionary *userInfo = nil;
     {
-        if (!data) {
-            return nil;
-        }
-
         NSMutableDictionary *mutableOptions = [NSMutableDictionary dictionary];
         [mutableOptions setObject:@(YES) forKey:(NSString *)kCGImageSourceShouldCache];
         [mutableOptions setObject:(NSString *)kUTTypeGIF forKey:(NSString *)kCGImageSourceTypeIdentifierHint];
@@ -52,7 +52,7 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
             CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, idx, (__bridge CFDictionaryRef)mutableOptions);
 
             NSDictionary *properties = (__bridge_transfer NSDictionary *)CGImageSourceCopyPropertiesAtIndex(imageSource, idx, NULL);
-            calculatedDuration += [[[properties objectForKey:(NSString *)kCGImagePropertyGIFDictionary] objectForKey:(NSString *)kCGImagePropertyGIFDelayTime] doubleValue];
+            calculatedDuration += [[[properties objectForKey:(__bridge NSString *)kCGImagePropertyGIFDictionary] objectForKey:(__bridge  NSString *)kCGImagePropertyGIFDelayTime] doubleValue];
 
             [mutableImages addObject:[UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp]];
 
@@ -82,35 +82,50 @@ static BOOL AnimatedGifDataIsValid(NSData *data) {
     return NO;
 }
 
-__attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image, NSTimeInterval duration, NSInteger loopCount, NSError * __autoreleasing *error) {
+__attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image) {
+    return UIImageAnimatedGIFRepresentation(image, 0.0f, 0, nil);
+}
+
+__attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image, NSTimeInterval duration, NSUInteger loopCount, NSError * __autoreleasing *error) {
+    if (!image.images) {
+        return nil;
+    }
+
     NSDictionary *userInfo = nil;
     {
-        if (!image.images) {
-            return nil;
-        }
-        
         size_t frameCount = image.images.count;
-        NSMutableData *animatedGIFData = [NSMutableData data];
-        NSDictionary *imageProperties = @{ (__bridge id)kCGImagePropertyGIFDictionary: @{ (__bridge id)kCGImagePropertyGIFLoopCount: @(loopCount) } };
-        CGImageDestinationRef target = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)animatedGIFData, kUTTypeGIF, frameCount, NULL);
-        CGImageDestinationSetProperties(target, (__bridge CFDictionaryRef)imageProperties);
-        
-        float frameDuration = (duration <= 0 ? image.duration / frameCount : duration / frameCount);
+        NSTimeInterval frameDuration = (duration <= 0.0 ? image.duration / frameCount : duration / frameCount);
         NSDictionary *frameProperties = @{
-            (__bridge id)kCGImagePropertyGIFDictionary: @{
-                (__bridge id)kCGImagePropertyGIFDelayTime: @(frameDuration)
-            }
-        };
-        
+                                          (__bridge NSString *)kCGImagePropertyGIFDictionary: @{
+                                                  (__bridge NSString *)kCGImagePropertyGIFDelayTime: @(frameDuration)
+                                                  }
+                                          };
+
+        NSMutableData *mutableData = [NSMutableData data];
+        CGImageDestinationRef destination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)mutableData, kUTTypeGIF, frameCount, NULL);
+
+        NSDictionary *imageProperties = @{ (__bridge NSString *)kCGImagePropertyGIFDictionary: @{
+                                              (__bridge NSString *)kCGImagePropertyGIFLoopCount: @(loopCount)
+                                            }
+                                    };
+        CGImageDestinationSetProperties(destination, (__bridge CFDictionaryRef)imageProperties);
+
         for (size_t idx = 0; idx < image.images.count; idx++) {
-            CGImageDestinationAddImage(target, [[image.images objectAtIndex:idx] CGImage], (__bridge CFDictionaryRef)frameProperties);
+            CGImageDestinationAddImage(destination, [[image.images objectAtIndex:idx] CGImage], (__bridge CFDictionaryRef)frameProperties);
         }
         
-        BOOL success = CGImageDestinationFinalize(target);
-        CFRelease(target);
-        if (success) {
-            return [NSData dataWithData:animatedGIFData];
+        BOOL success = CGImageDestinationFinalize(destination);
+        CFRelease(destination);
+
+        if (!success) {
+            userInfo = @{
+                         NSLocalizedDescriptionKey: NSLocalizedString(@"Could not finalize image destination", nil)
+                        };
+
+            goto _error;
         }
+
+        return [NSData dataWithData:mutableData];
     }
     _error: {
         if (error) {
@@ -119,10 +134,6 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
         
         return nil;
     }
-}
-
-__attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image) {
-    return UIImageAnimatedGIFRepresentation(image, 0.0f, 0, nil);
 }
 
 @implementation AnimatedGIFImageSerialization
@@ -151,7 +162,7 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
 
 + (NSData *)animatedGIFDataWithImage:(UIImage *)image
                             duration:(NSTimeInterval)duration
-                           loopCount:(NSInteger)loopCount
+                           loopCount:(NSUInteger)loopCount
                                error:(NSError *__autoreleasing *)error
 {
     return UIImageAnimatedGIFRepresentation(image, duration, loopCount, error);
@@ -216,7 +227,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 }
 
 - (id)animated_gif_initWithData:(NSData *)data
-                  scale:(CGFloat)scale __attribute__((objc_method_family(init)))
+                          scale:(CGFloat)scale __attribute__((objc_method_family(init)))
 {
     if (AnimatedGifDataIsValid(data)) {
         return UIImageWithAnimatedGIFData(data, scale, 0.0f, nil);
