@@ -19,11 +19,11 @@ imageView.image = [UIImage imageNamed:@"animated.gif"];
 ### Encoding
 
 ```objective-c
-UIImage *animatedImage = ...;
-NSData *animatedGIFData = [AnimatedGIFImageSerialization animatedGIFDataWithImage:animatedImage 
-																																				 duration:(animatedImage.duration * 2.0) 
-																																				loopCount:1
-																																						error:nil];
+UIImage *image = ...;
+NSData *data = [AnimatedGIFImageSerialization animatedGIFDataWithImage:image
+                                                              duration:1.0
+                                                             loopCount:1
+                                                                 error:nil];
 ```
 
 ---
