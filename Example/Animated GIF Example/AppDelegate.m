@@ -40,6 +40,19 @@ didFinishLaunchingWithOptions:(__unused NSDictionary *)launchOptions
     imageView.image = [UIImage imageNamed:@"animated.gif"];
     [viewController.view addSubview:imageView];
 
+    UIImageView *imageViewNonAnimated = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"nonanimated.gif"]];
+    [viewController.view addSubview:imageViewNonAnimated];
+
+    UIImageView *imageViewPNG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tesla.png"]];
+    CGRect frame = imageViewPNG.frame;
+    frame.origin.x = viewController.view.bounds.size.height / 1.5;
+    imageViewPNG.frame = frame;
+    [viewController.view addSubview:imageViewPNG];
+
+    NSLog(@"Animated gif images: %@", imageView.image.images);
+    NSLog(@"Non-animated gif images: %@", imageViewNonAnimated.image.images);
+    NSLog(@"PNG images: %@", imageViewPNG.image.images);
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
 

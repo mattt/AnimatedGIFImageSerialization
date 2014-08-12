@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC88A83D199ABCB300330B69 /* nonanimated.gif in Resources */ = {isa = PBXBuildFile; fileRef = BC88A83C199ABCB300330B69 /* nonanimated.gif */; };
+		BC88A83F199ABF3000330B69 /* tesla.png in Resources */ = {isa = PBXBuildFile; fileRef = BC88A83E199ABF3000330B69 /* tesla.png */; };
 		F82E75AF18ABDC4E002D596E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F82E75AE18ABDC4E002D596E /* Foundation.framework */; };
 		F82E75B118ABDC4E002D596E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F82E75B018ABDC4E002D596E /* CoreGraphics.framework */; };
 		F82E75B318ABDC4E002D596E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F82E75B218ABDC4E002D596E /* UIKit.framework */; };
@@ -21,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC88A83C199ABCB300330B69 /* nonanimated.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = nonanimated.gif; sourceTree = "<group>"; };
+		BC88A83E199ABF3000330B69 /* tesla.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tesla.png; sourceTree = "<group>"; };
 		F82E75AB18ABDC4E002D596E /* Animated GIF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Animated GIF.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F82E75AE18ABDC4E002D596E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F82E75B018ABDC4E002D596E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -99,6 +103,8 @@
 		F82E75B518ABDC4E002D596E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BC88A83E199ABF3000330B69 /* tesla.png */,
+				BC88A83C199ABCB300330B69 /* nonanimated.gif */,
 				F82E75B618ABDC4E002D596E /* Info.plist */,
 				F82E75B718ABDC4E002D596E /* InfoPlist.strings */,
 				F82E75BA18ABDC4E002D596E /* main.m */,
@@ -179,6 +185,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F82E75B918ABDC4E002D596E /* InfoPlist.strings in Resources */,
+				BC88A83D199ABCB300330B69 /* nonanimated.gif in Resources */,
+				BC88A83F199ABF3000330B69 /* tesla.png in Resources */,
 				F82E75C118ABDC4E002D596E /* Images.xcassets in Resources */,
 				F862CE2718E1F53800DC750D /* animated.gif in Resources */,
 			);
