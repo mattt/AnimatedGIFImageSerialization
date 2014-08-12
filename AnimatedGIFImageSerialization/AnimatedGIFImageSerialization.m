@@ -61,7 +61,13 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
 
         CFRelease(imageSource);
 
-        return [UIImage animatedImageWithImages:mutableImages duration:(duration <= 0.0f ? calculatedDuration : duration)];
+        UIImage *image = nil;
+        if (numberOfFrames >= 2) {
+            image = [UIImage animatedImageWithImages:mutableImages duration:(duration <= 0.0f ? calculatedDuration : duration)];
+        } else if (numberOfFrames == 1) {
+            image = [mutableImages firstObject];
+        }
+        return image;
     }
     _error: {
         if (error) {
