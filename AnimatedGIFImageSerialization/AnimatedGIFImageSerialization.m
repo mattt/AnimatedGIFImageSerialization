@@ -257,7 +257,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         return UIImageWithAnimatedGIFData(data, scale, 0.0f, nil);
     }
 
-    return [self animated_gif_imageWithData:data];
+    return [self animated_gif_imageWithData:data scale:scale];
 }
 
 #pragma mark -
