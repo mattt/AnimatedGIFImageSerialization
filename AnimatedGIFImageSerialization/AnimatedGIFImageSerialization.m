@@ -36,7 +36,6 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
         return nil;
     }
 
-    NSDictionary *userInfo = nil;
     {
         NSMutableDictionary *mutableOptions = [NSMutableDictionary dictionary];
         [mutableOptions setObject:@(YES) forKey:(NSString *)kCGImageSourceShouldCache];
@@ -67,23 +66,6 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
             return [UIImage animatedImageWithImages:mutableImages duration:(duration <= 0.0f ? calculatedDuration : duration)];
         }
     }
-    _error: {
-        if (error) {
-            *error = [[NSError alloc] initWithDomain:AnimatedGIFImageErrorDomain code:-1 userInfo:userInfo];
-        }
-
-        return nil;
-    }
-}
-
-static BOOL AnimatedGifDataIsValid(NSData *data) {
-    if (data.length > 4) {
-        const unsigned char * bytes = [data bytes];
-
-        return bytes[0] == 0x47 && bytes[1] == 0x49 && bytes[2] == 0x46;
-    }
-
-    return NO;
 }
 
 __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image) {
@@ -141,6 +123,17 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
 }
 
 @implementation AnimatedGIFImageSerialization
+
++ (BOOL)imageDataIsAnimatedGIF:(NSData *)data
+{
+    if (data.length > 4) {
+        const unsigned char * bytes = [data bytes];
+
+        return bytes[0] == 0x47 && bytes[1] == 0x49 && bytes[2] == 0x46;
+    }
+
+    return NO;
+}
 
 + (UIImage *)imageWithData:(NSData *)data
                      error:(NSError * __autoreleasing *)error
@@ -219,7 +212,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 
     if (path) {
         NSData *data = [NSData dataWithContentsOfFile:path];
-        if (AnimatedGifDataIsValid(data)) {
+        if ([AnimatedGIFImageSerialization imageDataIsAnimatedGIF:data]) {
             return UIImageWithAnimatedGIFData(data);
         }
     }
@@ -230,7 +223,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 + (UIImage *)animated_gif_imageWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(new))) {
     if (path) {
         NSData *data = [NSData dataWithContentsOfFile:path];
-        if (AnimatedGifDataIsValid(data)) {
+        if ([AnimatedGIFImageSerialization imageDataIsAnimatedGIF:data]) {
             if ([[path stringByDeletingPathExtension] hasSuffix:@"@2x"]) {
                 return UIImageWithAnimatedGIFData(data, 2.0f, 0.0f, nil);
             } else {
@@ -243,7 +236,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 }
 
 + (UIImage *)animated_gif_imageWithData:(NSData *)data __attribute__((objc_method_family(init))) {
-    if (AnimatedGifDataIsValid(data)) {
+    if ([AnimatedGIFImageSerialization imageDataIsAnimatedGIF:data]) {
         return UIImageWithAnimatedGIFData(data);
     }
 
@@ -253,7 +246,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 + (UIImage *)animated_gif_imageWithData:(NSData *)data
                                   scale:(CGFloat)scale __attribute__((objc_method_family(init)))
 {
-    if (AnimatedGifDataIsValid(data)) {
+    if ([AnimatedGIFImageSerialization imageDataIsAnimatedGIF:data]) {
         return UIImageWithAnimatedGIFData(data, scale, 0.0f, nil);
     }
 
@@ -264,7 +257,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 
 - (id)animated_gif_initWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(init))) {
     NSData *data = [NSData dataWithContentsOfFile:path];
-    if (AnimatedGifDataIsValid(data)) {
+    if ([AnimatedGIFImageSerialization imageDataIsAnimatedGIF:data]) {
         if ([[path stringByDeletingPathExtension] hasSuffix:@"@2x"]) {
             return UIImageWithAnimatedGIFData(data, 2.0, 0.0f, nil);
         } else {
@@ -276,7 +269,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 }
 
 - (id)animated_gif_initWithData:(NSData *)data __attribute__((objc_method_family(init))) {
-    if (AnimatedGifDataIsValid(data)) {
+    if ([AnimatedGIFImageSerialization imageDataIsAnimatedGIF:data]) {
         return UIImageWithAnimatedGIFData(data);
     }
 
@@ -286,7 +279,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 - (id)animated_gif_initWithData:(NSData *)data
                           scale:(CGFloat)scale __attribute__((objc_method_family(init)))
 {
-    if (AnimatedGifDataIsValid(data)) {
+    if ([AnimatedGIFImageSerialization imageDataIsAnimatedGIF:data]) {
         return UIImageWithAnimatedGIFData(data, scale, 0.0f, nil);
     }
 
