@@ -59,6 +59,11 @@ extern __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(U
 
 /**
 
+*/
++ (BOOL)imageDataIsAnimatedGIF:(NSData *)data;
+
+/**
+
  */
 + (UIImage *)imageWithData:(NSData *)data
                      error:(NSError * __autoreleasing *)error;
