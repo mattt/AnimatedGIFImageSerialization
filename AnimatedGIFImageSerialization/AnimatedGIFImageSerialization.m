@@ -36,7 +36,6 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
         return nil;
     }
 
-    NSDictionary *userInfo = nil;
     {
         NSMutableDictionary *mutableOptions = [NSMutableDictionary dictionary];
         [mutableOptions setObject:@(YES) forKey:(NSString *)kCGImageSourceShouldCache];
@@ -66,13 +65,6 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
         } else {
             return [UIImage animatedImageWithImages:mutableImages duration:(duration <= 0.0f ? calculatedDuration : duration)];
         }
-    }
-    _error: {
-        if (error) {
-            *error = [[NSError alloc] initWithDomain:AnimatedGIFImageErrorDomain code:-1 userInfo:userInfo];
-        }
-
-        return nil;
     }
 }
 
