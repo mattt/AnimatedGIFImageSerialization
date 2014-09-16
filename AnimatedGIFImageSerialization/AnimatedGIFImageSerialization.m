@@ -176,9 +176,11 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
 
 #pragma mark -
 
-#ifndef ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING
 #import <objc/runtime.h>
 
+@implementation UIImage (_AnimatedGIFImageSerialization)
+
+#ifndef ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING
 static inline void animated_gif_swizzleSelector(Class class, SEL originalSelector, SEL swizzledSelector) {
     Method originalMethod = class_getInstanceMethod(class, originalSelector);
     Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
@@ -188,11 +190,6 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         method_exchangeImplementations(originalMethod, swizzledMethod);
     }
 }
-
-@interface UIImage (_AnimatedGIFImageSerialization)
-@end
-
-@implementation UIImage (_AnimatedGIFImageSerialization)
 
 + (void)load {
     static dispatch_once_t onceToken;
@@ -208,6 +205,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         }
     });
 }
+#endif
 
 #pragma mark -
 
@@ -294,4 +292,3 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 }
 
 @end
-#endif

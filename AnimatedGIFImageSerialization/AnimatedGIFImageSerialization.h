@@ -93,4 +93,19 @@ extern __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(U
  
  */
 extern NSString * const AnimatedGIFImageErrorDomain;
+
+@interface UIImage (_AnimatedGIFImageSerialization)
+#ifdef ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING
++ (UIImage *)animated_gif_imageNamed:(NSString *)name __attribute__((objc_method_family(new)));
++ (UIImage *)animated_gif_imageWithData:(NSData *)data __attribute__((objc_method_family(init)));
++ (UIImage *)animated_gif_imageWithData:(NSData *)data
+                                  scale:(CGFloat)scale __attribute__((objc_method_family(init)));
++ (UIImage *)animated_gif_imageWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(new)));
+- (id)animated_gif_initWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(init)));
+- (id)animated_gif_initWithData:(NSData *)data __attribute__((objc_method_family(init)));
+- (id)animated_gif_initWithData:(NSData *)data
+                          scale:(CGFloat)scale __attribute__((objc_method_family(init)));
+#endif
+@end
+
 #endif
