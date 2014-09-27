@@ -178,9 +178,20 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
 
 #import <objc/runtime.h>
 
+@interface UIImage (_AnimatedGIFImageSerialization_internal)
++ (UIImage *)animated_gif_uiimage_imageNamed:(NSString *)name __attribute__((objc_method_family(new)));
++ (UIImage *)animated_gif_uiimage_imageWithData:(NSData *)data __attribute__((objc_method_family(init)));
++ (UIImage *)animated_gif_uiimage_imageWithData:(NSData *)data
+                                  scale:(CGFloat)scale __attribute__((objc_method_family(init)));
++ (UIImage *)animated_gif_uiimage_imageWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(new)));
+- (id)animated_gif_uiimage_initWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(init)));
+- (id)animated_gif_uiimage_initWithData:(NSData *)data __attribute__((objc_method_family(init)));
+- (id)animated_gif_uiimage_initWithData:(NSData *)data
+                          scale:(CGFloat)scale __attribute__((objc_method_family(init)));
+@end
+
 @implementation UIImage (_AnimatedGIFImageSerialization)
 
-#ifndef ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING
 static inline void animated_gif_swizzleSelector(Class class, SEL originalSelector, SEL swizzledSelector) {
     Method originalMethod = class_getInstanceMethod(class, originalSelector);
     Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
@@ -195,6 +206,14 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         @autoreleasepool {
+            animated_gif_swizzleSelector(object_getClass((id)self), @selector(animated_gif_uiimage_imageNamed:), @selector(imageNamed:));
+            animated_gif_swizzleSelector(object_getClass((id)self), @selector(animated_gif_uiimage_imageWithData:), @selector(imageWithData:));
+            animated_gif_swizzleSelector(object_getClass((id)self), @selector(animated_gif_uiimage_imageWithData:scale:), @selector(imageWithData:scale:));
+            animated_gif_swizzleSelector(object_getClass((id)self), @selector(animated_gif_uiimage_imageWithContentsOfFile:), @selector(imageWithContentsOfFile:));
+            animated_gif_swizzleSelector(object_getClass((id)self), @selector(animated_gif_uiimage_initWithData:), @selector(initWithData:));
+            animated_gif_swizzleSelector(object_getClass((id)self), @selector(animated_gif_uiimage_initWithData:scale:), @selector(initWithData:scale:));            
+            
+#ifndef ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING
             animated_gif_swizzleSelector(object_getClass((id)self), @selector(imageNamed:), @selector(animated_gif_imageNamed:));
             animated_gif_swizzleSelector(object_getClass((id)self), @selector(imageWithData:), @selector(animated_gif_imageWithData:));
             animated_gif_swizzleSelector(object_getClass((id)self), @selector(imageWithData:scale:), @selector(animated_gif_imageWithData:scale:));
@@ -202,10 +221,10 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
             animated_gif_swizzleSelector(self, @selector(initWithContentsOfFile:), @selector(animated_gif_initWithContentsOfFile:));
             animated_gif_swizzleSelector(self, @selector(initWithData:), @selector(animated_gif_initWithData:));
             animated_gif_swizzleSelector(self, @selector(initWithData:scale:), @selector(animated_gif_initWithData:scale:));
+#endif
         }
     });
 }
-#endif
 
 #pragma mark -
 
@@ -222,7 +241,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         }
     }
 
-    return [self animated_gif_imageNamed:name];
+    return [self animated_gif_uiimage_imageNamed:name];
 }
 
 + (UIImage *)animated_gif_imageWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(new))) {
@@ -237,7 +256,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         }
     }
 
-    return [self animated_gif_imageWithContentsOfFile:path];
+    return [self animated_gif_uiimage_imageWithContentsOfFile:path];
 }
 
 + (UIImage *)animated_gif_imageWithData:(NSData *)data __attribute__((objc_method_family(init))) {
@@ -245,7 +264,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         return UIImageWithAnimatedGIFData(data);
     }
 
-    return [self animated_gif_imageWithData:data];
+    return [self animated_gif_uiimage_imageWithData:data];
 }
 
 + (UIImage *)animated_gif_imageWithData:(NSData *)data
@@ -255,7 +274,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         return UIImageWithAnimatedGIFData(data, scale, 0.0f, nil);
     }
 
-    return [self animated_gif_imageWithData:data scale:scale];
+    return [self animated_gif_uiimage_imageWithData:data scale:scale];
 }
 
 #pragma mark -
@@ -270,7 +289,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         }
     }
 
-    return [self animated_gif_initWithContentsOfFile:path];
+    return [self animated_gif_uiimage_initWithContentsOfFile:path];
 }
 
 - (id)animated_gif_initWithData:(NSData *)data __attribute__((objc_method_family(init))) {
@@ -288,7 +307,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         return UIImageWithAnimatedGIFData(data, scale, 0.0f, nil);
     }
 
-    return [self animated_gif_initWithData:data scale:scale];
+    return [self animated_gif_uiimage_initWithData:data scale:scale];
 }
 
 @end
