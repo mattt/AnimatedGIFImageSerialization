@@ -212,9 +212,23 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 #pragma mark -
 
 + (UIImage *)animated_gif_imageNamed:(NSString *)name __attribute__((objc_method_family(new))) {
-    NSString *path = [[NSBundle mainBundle] pathForResource:[name stringByDeletingPathExtension] ofType:[name pathExtension]];
+    CGFloat scale =  [[UIScreen mainScreen] scale];
+    NSString * loadName =  name;
+    
+    if ((scale >= 2) && (scale  < 3)) {
+        loadName = [[[name stringByDeletingPathExtension]
+                     stringByAppendingString:@"@2x"]
+                    stringByAppendingPathExtension:name.pathExtension];
+    }else{
+        loadName = [[[name stringByDeletingPathExtension]
+                     stringByAppendingString:@"@3x"]
+                    stringByAppendingPathExtension:name.pathExtension];
+    }
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:[loadName stringByDeletingPathExtension] ofType:[loadName pathExtension]];
+    
     if (!path) {
-        path = [[NSBundle mainBundle] pathForResource:[[name stringByDeletingPathExtension] stringByAppendingString:@"@2x"] ofType:[name pathExtension]];
+        path = [[NSBundle mainBundle] pathForResource:[name stringByDeletingPathExtension] ofType:[name pathExtension]];
     }
 
     if (path) {
