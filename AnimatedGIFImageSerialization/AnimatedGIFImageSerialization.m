@@ -25,6 +25,20 @@
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
+typedef NS_ENUM(NSInteger, AnimatedGifScreenType)
+{
+    AnimatedGifScreenType480h = 480, // ip 1,2,3,4,4s
+    AnimatedGifScreenType568h = 568, // ip5 ,ip5s
+    AnimatedGifScreenType667h = 667, // ip6
+    AnimatedGifScreenType736h = 736, // ip6+
+    AnimatedGifScreenTypeUnknown = 0
+};
+
+#define AnimatedGifScreenTypeSuffix480h @""
+#define AnimatedGifScreenTypeSuffix568h @"-568h"
+#define AnimatedGifScreenTypeSuffix667h @"-667h"
+#define AnimatedGifScreenTypeSuffix736h @"-736h"
+
 NSString * const AnimatedGIFImageErrorDomain = @"com.compuserve.gif.image.error";
 
 __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data) {
@@ -211,26 +225,55 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 
 #pragma mark -
 
+// TODO: handle the case where name have no extension
 + (UIImage *)animated_gif_imageNamed:(NSString *)name __attribute__((objc_method_family(new))) {
-    CGFloat scale =  [[UIScreen mainScreen] scale];
+CGFloat scale =  [[UIScreen mainScreen] scale];
     NSString * loadName =  name;
     
+    CGRect screenBounds = [UIScreen mainScreen].bounds;
+    
+//    NSArray* supportExt = @[@"png", @"jpg", @"gif"];
+    
+    NSString* ratioSuffix = @"";
+    if (screenBounds.size.height == AnimatedGifScreenType480h) ratioSuffix = AnimatedGifScreenTypeSuffix480h;
+    if (screenBounds.size.height == AnimatedGifScreenType568h) ratioSuffix = AnimatedGifScreenTypeSuffix568h;
+    if (screenBounds.size.height == AnimatedGifScreenType667h) ratioSuffix = AnimatedGifScreenTypeSuffix667h;
+    if (screenBounds.size.height == AnimatedGifScreenType736h) ratioSuffix = AnimatedGifScreenTypeSuffix736h;
+    
+    
+    NSString* scaleSuffix = @"";
     if ((scale >= 2) && (scale  < 3)) {
-        loadName = [[[name stringByDeletingPathExtension]
-                     stringByAppendingString:@"@2x"]
-                    stringByAppendingPathExtension:name.pathExtension];
+        scaleSuffix = @"@2x";
     }else{
-        loadName = [[[name stringByDeletingPathExtension]
-                     stringByAppendingString:@"@3x"]
-                    stringByAppendingPathExtension:name.pathExtension];
+        scaleSuffix = @"@3x";
     }
     
+    NSString* suffix = [NSString stringWithFormat:@"%@%@", ratioSuffix, scaleSuffix];
+
+    
+    loadName = [[[name stringByDeletingPathExtension]
+                 stringByAppendingString:suffix]
+                stringByAppendingPathExtension:name.pathExtension];
+
+    // Load file like -568h@2x
     NSString *path = [[NSBundle mainBundle] pathForResource:[loadName stringByDeletingPathExtension] ofType:[loadName pathExtension]];
     
+    // try with scale suffix only
     if (!path) {
-        path = [[NSBundle mainBundle] pathForResource:[name stringByDeletingPathExtension] ofType:[name pathExtension]];
+        loadName = [[[name stringByDeletingPathExtension]
+                     stringByAppendingString:scaleSuffix]
+                    stringByAppendingPathExtension:name.pathExtension];
+
+        path = [[NSBundle mainBundle] pathForResource:[loadName stringByDeletingPathExtension] ofType:[loadName pathExtension]];
     }
 
+    
+    // If all failed, fall back to original file name
+    if(!path) {
+        path = [[NSBundle mainBundle] pathForResource:[name stringByDeletingPathExtension] ofType:[loadName pathExtension]];
+
+    }
+    
     if (path) {
         NSData *data = [NSData dataWithContentsOfFile:path];
         if (AnimatedGifDataIsValid(data)) {
@@ -238,7 +281,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
         }
     }
 
-    return [self animated_gif_imageNamed:name];
+    return [self animated_gif_imageNamed:loadName];
 }
 
 + (UIImage *)animated_gif_imageWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(new))) {
