@@ -227,7 +227,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 
 // TODO: handle the case where name have no extension
 + (UIImage *)animated_gif_imageNamed:(NSString *)name __attribute__((objc_method_family(new))) {
-CGFloat scale =  [[UIScreen mainScreen] scale];
+    CGFloat scale =  [[UIScreen mainScreen] scale];
     NSString * loadName =  name;
     
     CGRect screenBounds = [UIScreen mainScreen].bounds;
@@ -271,32 +271,19 @@ CGFloat scale =  [[UIScreen mainScreen] scale];
     // If all failed, fall back to original file name
     if(!path) {
         path = [[NSBundle mainBundle] pathForResource:[name stringByDeletingPathExtension] ofType:[loadName pathExtension]];
-
+        loadName = name;
     }
     
     if (path) {
         NSData *data = [NSData dataWithContentsOfFile:path];
         if (AnimatedGifDataIsValid(data)) {
             return UIImageWithAnimatedGIFData(data);
+        }else{
+            return [self animated_gif_imageNamed:loadName];
         }
     }
 
-    return [self animated_gif_imageNamed:loadName];
-}
-
-+ (UIImage *)animated_gif_imageWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(new))) {
-    if (path) {
-        NSData *data = [NSData dataWithContentsOfFile:path];
-        if (AnimatedGifDataIsValid(data)) {
-            if ([[path stringByDeletingPathExtension] hasSuffix:@"@2x"]) {
-                return UIImageWithAnimatedGIFData(data, 2.0f, 0.0f, nil);
-            } else {
-                return UIImageWithAnimatedGIFData(data);
-            }
-        }
-    }
-
-    return [self animated_gif_imageWithContentsOfFile:path];
+    return [self animated_gif_imageNamed:name];
 }
 
 + (UIImage *)animated_gif_imageWithData:(NSData *)data __attribute__((objc_method_family(init))) {
