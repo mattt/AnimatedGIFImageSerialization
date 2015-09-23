@@ -52,7 +52,17 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
             CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, idx, (__bridge CFDictionaryRef)mutableOptions);
 
             NSDictionary *properties = (__bridge_transfer NSDictionary *)CGImageSourceCopyPropertiesAtIndex(imageSource, idx, NULL);
-            calculatedDuration += [[[properties objectForKey:(__bridge NSString *)kCGImagePropertyGIFDictionary] objectForKey:(__bridge  NSString *)kCGImagePropertyGIFDelayTime] doubleValue];
+            NSDictionary *gifProperties = [properties objectForKey:(__bridge NSString *)kCGImagePropertyGIFDictionary];
+
+            // Frame duration is calculated in a WebKit-like manner:
+            // Unclamped if it exists, clamped as a fallback.
+            // Note: Unlike WebKit, there is no clamping done if the frame duration is < 0.011
+            // See frameDurationAtIndex at https://github.com/WebKit/webkit/blob/master/Source/WebCore/platform/graphics/cg/ImageSourceCG.cpp
+            NSNumber *frameDuration = [gifProperties objectForKey:(__bridge  NSString *)kCGImagePropertyGIFUnclampedDelayTime];
+            if (!frameDuration) {
+                frameDuration = [gifProperties objectForKey:(__bridge  NSString *)kCGImagePropertyGIFDelayTime];
+            }
+            calculatedDuration += [frameDuration doubleValue];
 
             [mutableImages addObject:[UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp]];
 
