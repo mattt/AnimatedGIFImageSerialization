@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7DB1CF2E1BB25436008A9D42 /* animated.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7DB1CF2D1BB25436008A9D42 /* animated.gif */; };
 		F82E75AF18ABDC4E002D596E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F82E75AE18ABDC4E002D596E /* Foundation.framework */; };
 		F82E75B118ABDC4E002D596E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F82E75B018ABDC4E002D596E /* CoreGraphics.framework */; };
 		F82E75B318ABDC4E002D596E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F82E75B218ABDC4E002D596E /* UIKit.framework */; };
@@ -16,11 +17,11 @@
 		F82E75C118ABDC4E002D596E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F82E75C018ABDC4E002D596E /* Images.xcassets */; };
 		F83E7E5F18E1FCA900309F89 /* AnimatedGIFImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = F83E7E5E18E1FCA900309F89 /* AnimatedGIFImageSerialization.m */; };
 		F862CE2518E1EFF000DC750D /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F862CE2418E1EFF000DC750D /* ImageIO.framework */; };
-		F862CE2718E1F53800DC750D /* animated.gif in Resources */ = {isa = PBXBuildFile; fileRef = F862CE2618E1F53800DC750D /* animated.gif */; };
 		F862CE2918E1F7AB00DC750D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F862CE2818E1F7AB00DC750D /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7DB1CF2D1BB25436008A9D42 /* animated.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = animated.gif; sourceTree = "<group>"; };
 		F82E75AB18ABDC4E002D596E /* Animated GIF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Animated GIF.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F82E75AE18ABDC4E002D596E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F82E75B018ABDC4E002D596E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -35,7 +36,6 @@
 		F83E7E5D18E1FCA900309F89 /* AnimatedGIFImageSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedGIFImageSerialization.h; sourceTree = "<group>"; };
 		F83E7E5E18E1FCA900309F89 /* AnimatedGIFImageSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedGIFImageSerialization.m; sourceTree = "<group>"; };
 		F862CE2418E1EFF000DC750D /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		F862CE2618E1F53800DC750D /* animated.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = animated.gif; sourceTree = "<group>"; };
 		F862CE2818E1F7AB00DC750D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -103,7 +103,7 @@
 				F82E75B718ABDC4E002D596E /* InfoPlist.strings */,
 				F82E75BA18ABDC4E002D596E /* main.m */,
 				F82E75BC18ABDC4E002D596E /* Prefix.pch */,
-				F862CE2618E1F53800DC750D /* animated.gif */,
+				7DB1CF2D1BB25436008A9D42 /* animated.gif */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -180,7 +180,7 @@
 			files = (
 				F82E75B918ABDC4E002D596E /* InfoPlist.strings in Resources */,
 				F82E75C118ABDC4E002D596E /* Images.xcassets in Resources */,
-				F862CE2718E1F53800DC750D /* animated.gif in Resources */,
+				7DB1CF2E1BB25436008A9D42 /* animated.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
