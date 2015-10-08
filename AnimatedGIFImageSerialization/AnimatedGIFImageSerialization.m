@@ -53,8 +53,11 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
 
             NSDictionary *properties = (__bridge_transfer NSDictionary *)CGImageSourceCopyPropertiesAtIndex(imageSource, idx, NULL);
             calculatedDuration += [[[properties objectForKey:(__bridge NSString *)kCGImagePropertyGIFDictionary] objectForKey:(__bridge  NSString *)kCGImagePropertyGIFDelayTime] doubleValue];
-
-            [mutableImages addObject:[UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp]];
+            
+            UIImage *image = [UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
+            if (image) {
+                [mutableImages addObject:image];
+            }
 
             CGImageRelease(imageRef);
         }
