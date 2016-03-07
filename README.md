@@ -22,7 +22,7 @@ imageView.image = [UIImage imageNamed:@"animated.gif"];
 
 ![Animated GIF](https://raw.githubusercontent.com/mattt/AnimatedGIFImageSerialization/master/Example/Animated%20GIF%20Example/animated.gif)
 
-## Storing GIFs locally
+#### Storing GIFs locally
 1. Store the gif files you want to use locally in your project directory. 
 They don't have to be in the root directory. Use the finder (or explorer) and copy the gifs you want to the project directory (not the Project navigator in xCode)
 2. Add the gif files to the Project navigator in xCode (you can place them inside their own group).
