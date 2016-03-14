@@ -91,13 +91,20 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
 }
 
 __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image, NSTimeInterval duration, NSUInteger loopCount, NSError * __autoreleasing *error) {
-    if (!image.images) {
+    
+    if (!image) {
         return nil;
     }
-
+    
+    NSArray *images = image.images;
+    
+    if (!images) {
+        images = @[image];
+    }
+    
     NSDictionary *userInfo = nil;
     {
-        size_t frameCount = image.images.count;
+        size_t frameCount = images.count;
         NSTimeInterval frameDuration = (duration <= 0.0 ? image.duration / frameCount : duration / frameCount);
         NSDictionary *frameProperties = @{
                                           (__bridge NSString *)kCGImagePropertyGIFDictionary: @{
@@ -113,9 +120,9 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
                                             }
                                     };
         CGImageDestinationSetProperties(destination, (__bridge CFDictionaryRef)imageProperties);
-
-        for (size_t idx = 0; idx < image.images.count; idx++) {
-            CGImageDestinationAddImage(destination, [[image.images objectAtIndex:idx] CGImage], (__bridge CFDictionaryRef)frameProperties);
+        
+        for (size_t idx = 0; idx < images.count; idx++) {
+            CGImageDestinationAddImage(destination, [[images objectAtIndex:idx] CGImage], (__bridge CFDictionaryRef)frameProperties);
         }
         
         BOOL success = CGImageDestinationFinalize(destination);
