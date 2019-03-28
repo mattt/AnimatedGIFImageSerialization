@@ -154,7 +154,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1020;
-				ORGANIZATIONNAME = "Mattt Thompson";
+				ORGANIZATIONNAME = Mattt;
 				TargetAttributes = {
 					F82E75AA18ABDC4E002D596E = {
 						ProvisioningStyle = Automatic;
