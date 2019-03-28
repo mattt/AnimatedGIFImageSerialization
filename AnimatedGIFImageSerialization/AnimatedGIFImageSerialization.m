@@ -317,7 +317,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (UIImage * _Nullable)animated_gif_imageWithData:(NSData *)data
-                                  scale:(CGFloat)scale {
+                                            scale:(CGFloat)scale {
     if (AnimatedGifDataIsValid(data)) {
         return UIImageWithAnimatedGIFData(data, scale, 0.0, nil);
     }
