@@ -279,7 +279,9 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
     if (path) {
         NSData *data = [NSData dataWithContentsOfFile:path];
         if (AnimatedGifDataIsValid(data)) {
-            if ([[path stringByDeletingPathExtension] hasSuffix:@"@2x"]) {
+            if ([[path stringByDeletingPathExtension] hasSuffix:@"@3x"]) {
+                return UIImageWithAnimatedGIFData(data, 3.0f, 0.0f, nil);
+            } else if ([[path stringByDeletingPathExtension] hasSuffix:@"@2x"]) {
                 return UIImageWithAnimatedGIFData(data, 2.0f, 0.0f, nil);
             } else {
                 return UIImageWithAnimatedGIFData(data);
@@ -312,7 +314,9 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 - (id)animated_gif_initWithContentsOfFile:(NSString *)path __attribute__((objc_method_family(init))) {
     NSData *data = [NSData dataWithContentsOfFile:path];
     if (AnimatedGifDataIsValid(data)) {
-        if ([[path stringByDeletingPathExtension] hasSuffix:@"@2x"]) {
+        if ([[path stringByDeletingPathExtension] hasSuffix:@"@3x"]) {
+            return UIImageWithAnimatedGIFData(data, 3.0, 0.0f, nil);
+        } else if ([[path stringByDeletingPathExtension] hasSuffix:@"@2x"]) {
             return UIImageWithAnimatedGIFData(data, 2.0, 0.0f, nil);
         } else {
             return UIImageWithAnimatedGIFData(data);
