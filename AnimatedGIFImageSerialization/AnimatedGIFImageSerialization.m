@@ -27,6 +27,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, AnimatedGifScreenType) {
+    AnimatedGifScreenType480h = 480, // iPhone 1, 2, 3, 4, 4s
+    AnimatedGifScreenType568h = 568, // iPhone 5, iPhone 5s
+    AnimatedGifScreenType667h = 667, // iPhone 6
+    AnimatedGifScreenType736h = 736, // iPhone 6+
+    AnimatedGifScreenTypeUnknown = 0
+};
+
+NSString * const AnimatedGifScreenTypeSuffix480h = @"";
+NSString * const AnimatedGifScreenTypeSuffix568h = @"-568h";
+NSString * const AnimatedGifScreenTypeSuffix667h = @"-667h";
+NSString * const AnimatedGifScreenTypeSuffix736h = @"-736h";
+
 NSString * const AnimatedGIFImageErrorDomain = @"com.compuserve.gif.image.error";
 
 __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data) {
@@ -208,11 +221,50 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 #pragma mark -
 
 + (UIImage *)animated_gif_imageNamed:(NSString *)name __attribute__((objc_method_family(new))) {
-    NSString *path = [[NSBundle mainBundle] pathForResource:[name stringByDeletingPathExtension] ofType:[name pathExtension]];
-    if (!path) {
-        path = [[NSBundle mainBundle] pathForResource:[[name stringByDeletingPathExtension] stringByAppendingString:@"@2x"] ofType:[name pathExtension]];
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    
+    NSString *ratioSuffix = @"";
+    switch ((NSUInteger)screenBounds.size.height) {
+        case AnimatedGifScreenType480h:
+            ratioSuffix = AnimatedGifScreenTypeSuffix480h;
+            break;
+        case AnimatedGifScreenType568h:
+            ratioSuffix = AnimatedGifScreenTypeSuffix568h;
+            break;
+        case AnimatedGifScreenType667h:
+            ratioSuffix = AnimatedGifScreenTypeSuffix667h;
+            break;
+        case AnimatedGifScreenType736h:
+            ratioSuffix = AnimatedGifScreenTypeSuffix736h;
+            break;
     }
 
+    NSString *scaleSuffix = @"";
+    if (scale >= 3) {
+        scaleSuffix = @"@3x";
+    } else if (scale >= 2) {
+        scaleSuffix = @"@2x";
+    }
+    
+    NSString * _Nullable path = nil;
+    if (!path) {
+        // e.g. animated-568h@2x.gif
+        NSString *nameWithRatioAndScale = [[[name stringByDeletingPathExtension] stringByAppendingString:ratioSuffix] stringByAppendingString:scaleSuffix];
+        path = [[NSBundle mainBundle] pathForResource:nameWithRatioAndScale ofType:[name pathExtension]];
+    }
+    
+    if (!path) {
+        // e.g. animated@2x.gif
+        NSString *nameWithRatio = [[[name stringByDeletingPathExtension] stringByAppendingString:scaleSuffix] stringByAppendingPathExtension:[name pathExtension]];
+        path = [[NSBundle mainBundle] pathForResource:nameWithRatio ofType:[name pathExtension]];
+    }
+    
+    if (!path) {
+        // e.g. animated.gif
+        path = [[NSBundle mainBundle] pathForResource:[name stringByDeletingPathExtension] ofType:[name pathExtension]];
+    }
+    
     if (path) {
         NSData *data = [NSData dataWithContentsOfFile:path];
         if (AnimatedGifDataIsValid(data)) {
