@@ -1,5 +1,4 @@
-AnimatedGIFImageSerialization
-=============================
+# AnimatedGIFImageSerialization
 
 `AnimatedGIFImageSerialization` decodes an `UIImage` from [Animated GIFs](http://en.wikipedia.org/wiki/Graphics_Interchange_Format) image data, following the API conventions of Foundation's `NSJSONSerialization` class.
 
@@ -30,11 +29,7 @@ NSData *data = [AnimatedGIFImageSerialization animatedGIFDataWithImage:image
 
 ## Contact
 
-Mattt Thompson
-
-- http://github.com/mattt
-- http://twitter.com/mattt
-- m@mattt.me
+Mattt ([@mattt](https://twitter.com/mattt))
 
 ## License
 
