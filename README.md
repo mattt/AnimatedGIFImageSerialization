@@ -4,6 +4,18 @@
 
 As it ships with iOS, `UIImage` does not support decoding animated gifs into an animated `UIImage`. But so long as `ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING` is not `#define`'d, the this library will swizzle the `UIImage` initializers to automatically support animated GIFs.
 
+
+```
+post_install do |r|
+    r.pods_project.targets.each do |target|
+        if target.name == 'AnimatedGIFImageSerialization' then
+            target.build_configurations.each do |config|
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING=1']
+            end
+        end
+    end
+end
+```
 ## Usage
 
 ### Decoding
