@@ -35,7 +35,7 @@ didFinishLaunchingWithOptions:(__unused NSDictionary *)launchOptions
     self.window.rootViewController = viewController;
 
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:viewController.view.bounds];
-    imageView.contentMode = UIViewContentModeCenter;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     imageView.image = [UIImage imageNamed:@"animated.gif"];
     [viewController.view addSubview:imageView];
