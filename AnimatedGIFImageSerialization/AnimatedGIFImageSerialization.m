@@ -103,13 +103,11 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
 }
 
 __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage *image, NSTimeInterval duration, NSUInteger loopCount, NSError * __autoreleasing *error) {
-    
     if (!image) {
         return nil;
     }
     
     NSArray *images = image.images;
-    
     if (!images) {
         images = @[image];
     }
@@ -120,17 +118,17 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
         NSTimeInterval frameDuration = (duration <= 0.0 ? image.duration / frameCount : duration / frameCount);
         NSDictionary *frameProperties = @{
                                           (__bridge NSString *)kCGImagePropertyGIFDictionary: @{
-                                                  (__bridge NSString *)kCGImagePropertyGIFDelayTime: @(frameDuration)
-                                                  }
-                                          };
+                                                (__bridge NSString *)kCGImagePropertyGIFDelayTime: @(frameDuration)
+                                          }
+                                        };
 
         NSMutableData *mutableData = [NSMutableData data];
         CGImageDestinationRef destination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)mutableData, kUTTypeGIF, frameCount, NULL);
 
         NSDictionary *imageProperties = @{ (__bridge NSString *)kCGImagePropertyGIFDictionary: @{
-                                              (__bridge NSString *)kCGImagePropertyGIFLoopCount: @(loopCount)
+                                                (__bridge NSString *)kCGImagePropertyGIFLoopCount: @(loopCount)
                                             }
-                                    };
+                                         };
         CGImageDestinationSetProperties(destination, (__bridge CFDictionaryRef)imageProperties);
         
         for (size_t idx = 0; idx < images.count; idx++) {
