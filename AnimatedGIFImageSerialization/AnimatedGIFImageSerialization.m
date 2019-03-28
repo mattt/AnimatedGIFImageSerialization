@@ -116,9 +116,10 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
     {
         size_t frameCount = images.count;
         NSTimeInterval frameDuration = (duration <= 0.0 ? image.duration / frameCount : duration / frameCount);
+        NSUInteger frameDelayCentiseconds = (NSUInteger)lrint(frameDuration * 100);
         NSDictionary *frameProperties = @{
                                           (__bridge NSString *)kCGImagePropertyGIFDictionary: @{
-                                                (__bridge NSString *)kCGImagePropertyGIFDelayTime: @(frameDuration)
+                                                (__bridge NSString *)kCGImagePropertyGIFDelayTime: @(frameDelayCentiseconds)
                                           }
                                         };
 
