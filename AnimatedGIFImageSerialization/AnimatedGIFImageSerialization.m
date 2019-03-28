@@ -25,6 +25,8 @@
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString * const AnimatedGIFImageErrorDomain = @"com.compuserve.gif.image.error";
 
 __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data) {
@@ -164,10 +166,14 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
 
 @end
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
 #ifndef ANIMATED_GIF_NO_UIIMAGE_INITIALIZER_SWIZZLING
 #import <objc/runtime.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 static inline void animated_gif_swizzleSelector(Class class, SEL originalSelector, SEL swizzledSelector) {
     Method originalMethod = class_getInstanceMethod(class, originalSelector);
@@ -283,4 +289,7 @@ static inline void animated_gif_swizzleSelector(Class class, SEL originalSelecto
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
+
 #endif

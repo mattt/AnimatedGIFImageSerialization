@@ -26,6 +26,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  
  */
@@ -93,4 +95,8 @@ extern __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(U
  
  */
 extern NSString * const AnimatedGIFImageErrorDomain;
+
+NS_ASSUME_NONNULL_END
+
 #endif
+
