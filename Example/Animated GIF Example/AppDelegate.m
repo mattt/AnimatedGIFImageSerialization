@@ -25,6 +25,7 @@
 #import "AnimatedGIFImageSerialization.h"
 
 @implementation AppDelegate
+@synthesize window;
 
 - (BOOL)application:(__unused UIApplication *)application
 didFinishLaunchingWithOptions:(__unused NSDictionary *)launchOptions
