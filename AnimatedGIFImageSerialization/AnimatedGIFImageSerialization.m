@@ -36,36 +36,33 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
         return nil;
     }
 
-    NSDictionary *userInfo = nil;
-    {
-        NSMutableDictionary *mutableOptions = [NSMutableDictionary dictionary];
-        [mutableOptions setObject:@(YES) forKey:(NSString *)kCGImageSourceShouldCache];
-        [mutableOptions setObject:(NSString *)kUTTypeGIF forKey:(NSString *)kCGImageSourceTypeIdentifierHint];
+    NSMutableDictionary *mutableOptions = [NSMutableDictionary dictionary];
+    [mutableOptions setObject:@(YES) forKey:(NSString *)kCGImageSourceShouldCache];
+    [mutableOptions setObject:(NSString *)kUTTypeGIF forKey:(NSString *)kCGImageSourceTypeIdentifierHint];
 
-        CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)data, (__bridge CFDictionaryRef)mutableOptions);
+    CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)data, (__bridge CFDictionaryRef)mutableOptions);
 
-        size_t numberOfFrames = CGImageSourceGetCount(imageSource);
-        NSMutableArray *mutableImages = [NSMutableArray arrayWithCapacity:numberOfFrames];
+    size_t numberOfFrames = CGImageSourceGetCount(imageSource);
+    NSMutableArray *mutableImages = [NSMutableArray arrayWithCapacity:numberOfFrames];
 
-        NSTimeInterval calculatedDuration = 0.0f;
-        for (size_t idx = 0; idx < numberOfFrames; idx++) {
-            CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, idx, (__bridge CFDictionaryRef)mutableOptions);
+    NSTimeInterval calculatedDuration = 0.0f;
+    for (size_t idx = 0; idx < numberOfFrames; idx++) {
+        CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, idx, (__bridge CFDictionaryRef)mutableOptions);
 
-            NSDictionary *properties = (__bridge_transfer NSDictionary *)CGImageSourceCopyPropertiesAtIndex(imageSource, idx, NULL);
-            calculatedDuration += [[[properties objectForKey:(__bridge NSString *)kCGImagePropertyGIFDictionary] objectForKey:(__bridge  NSString *)kCGImagePropertyGIFDelayTime] doubleValue];
+        NSDictionary *properties = (__bridge_transfer NSDictionary *)CGImageSourceCopyPropertiesAtIndex(imageSource, idx, NULL);
+        calculatedDuration += [[[properties objectForKey:(__bridge NSString *)kCGImagePropertyGIFDictionary] objectForKey:(__bridge  NSString *)kCGImagePropertyGIFDelayTime] doubleValue];
 
-            [mutableImages addObject:[UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp]];
+        [mutableImages addObject:[UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp]];
 
-            CGImageRelease(imageRef);
-        }
+        CGImageRelease(imageRef);
+    }
 
-        CFRelease(imageSource);
+    CFRelease(imageSource);
 
-        if (numberOfFrames == 1) {
-            return [mutableImages firstObject];
-        } else {
-            return [UIImage animatedImageWithImages:mutableImages duration:(duration <= 0.0f ? calculatedDuration : duration)];
-        }
+    if (numberOfFrames == 1) {
+        return [mutableImages firstObject];
+    } else {
+        return [UIImage animatedImageWithImages:mutableImages duration:(duration <= 0.0f ? calculatedDuration : duration)];
     }
 }
 
