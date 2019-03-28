@@ -106,12 +106,12 @@ __attribute__((overloadable)) NSData * _Nullable UIImageAnimatedGIFRepresentatio
     if (!image) {
         return nil;
     }
-    
+
     NSArray<UIImage *> *images = image.images;
     if (!images) {
         images = @[image];
     }
-    
+
     NSDictionary *userInfo = nil;
     {
         size_t frameCount = images.count;
@@ -131,14 +131,14 @@ __attribute__((overloadable)) NSData * _Nullable UIImageAnimatedGIFRepresentatio
                                                             }
                                                          };
         CGImageDestinationSetProperties(destination, (__bridge CFDictionaryRef)imageProperties);
-        
+
         for (size_t idx = 0; idx < images.count; idx++) {
             CGImageRef _Nullable cgimage = [images[idx] CGImage];
             if (cgimage) {
                 CGImageDestinationAddImage(destination, (CGImageRef _Nonnull)cgimage, (__bridge CFDictionaryRef)frameProperties);
             }
         }
-        
+
         BOOL success = CGImageDestinationFinalize(destination);
         CFRelease(destination);
 
@@ -156,7 +156,7 @@ __attribute__((overloadable)) NSData * _Nullable UIImageAnimatedGIFRepresentatio
         if (error) {
             *error = [[NSError alloc] initWithDomain:AnimatedGIFImageErrorDomain code:-1 userInfo:userInfo];
         }
-        
+
         return nil;
     }
 }
@@ -239,7 +239,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage * _Nullable)animated_gif_imageNamed:(NSString *)name __attribute__((objc_method_family(new))) {
     CGFloat scale = [[UIScreen mainScreen] scale];
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    
+
     NSString *ratioSuffix = @"";
     switch ((NSUInteger)screenBounds.size.height) {
         case AnimatedGifScreenType480h:
@@ -262,25 +262,25 @@ NS_ASSUME_NONNULL_BEGIN
     } else if (scale >= 2) {
         scaleSuffix = @"@2x";
     }
-    
+
     NSString * _Nullable path = nil;
     if (!path) {
         // e.g. animated-568h@2x.gif
         NSString *nameWithRatioAndScale = [[[name stringByDeletingPathExtension] stringByAppendingString:ratioSuffix] stringByAppendingString:scaleSuffix];
         path = [[NSBundle mainBundle] pathForResource:nameWithRatioAndScale ofType:[name pathExtension]];
     }
-    
+
     if (!path) {
         // e.g. animated@2x.gif
         NSString *nameWithRatio = [[[name stringByDeletingPathExtension] stringByAppendingString:scaleSuffix] stringByAppendingPathExtension:[name pathExtension]];
         path = [[NSBundle mainBundle] pathForResource:nameWithRatio ofType:[name pathExtension]];
     }
-    
+
     if (!path) {
         // e.g. animated.gif
         path = [[NSBundle mainBundle] pathForResource:[name stringByDeletingPathExtension] ofType:[name pathExtension]];
     }
-    
+
     if (path) {
         NSData *data = [NSData dataWithContentsOfFile:(NSString * _Nonnull)path];
         if (AnimatedGifDataIsValid(data)) {

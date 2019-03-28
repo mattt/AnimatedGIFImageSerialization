@@ -29,31 +29,31 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- 
+
  */
 extern __attribute__((overloadable)) UIImage * _Nullable UIImageWithAnimatedGIFData(NSData *data);
 
 /**
- 
+
  */
 extern __attribute__((overloadable)) UIImage * _Nullable UIImageWithAnimatedGIFData(NSData *data, CGFloat scale, NSTimeInterval duration, NSError * __autoreleasing *error);
 
 #pragma mark -
 
 /**
- 
+
  */
 extern __attribute__((overloadable)) NSData * _Nullable UIImageAnimatedGIFRepresentation(UIImage *image);
 
 /**
- 
+
  */
 extern __attribute__((overloadable)) NSData * _Nullable UIImageAnimatedGIFRepresentation(UIImage *image, NSTimeInterval duration, NSUInteger loopCount, NSError * __autoreleasing *error);
 
 #pragma mark -
 
 /**
- 
+
  */
 @interface AnimatedGIFImageSerialization : NSObject
 
@@ -82,7 +82,7 @@ extern __attribute__((overloadable)) NSData * _Nullable UIImageAnimatedGIFRepres
                                error:(NSError * __autoreleasing *)error;
 
 /**
- 
+
  */
 + (NSData * _Nullable)animatedGIFDataWithImage:(UIImage *)image
                                       duration:(NSTimeInterval)duration
@@ -92,7 +92,7 @@ extern __attribute__((overloadable)) NSData * _Nullable UIImageAnimatedGIFRepres
 @end
 
 /**
- 
+
  */
 extern NSString * const AnimatedGIFImageErrorDomain;
 
