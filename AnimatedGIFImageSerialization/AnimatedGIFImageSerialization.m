@@ -60,12 +60,19 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
     size_t numberOfFrames = CGImageSourceGetCount(imageSource);
     NSMutableArray *mutableImages = [NSMutableArray arrayWithCapacity:numberOfFrames];
 
-    NSTimeInterval calculatedDuration = 0.0f;
+    NSUInteger calculatedDuration = 0.0f;
     for (size_t idx = 0; idx < numberOfFrames; idx++) {
         CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, idx, (__bridge CFDictionaryRef)mutableOptions);
 
         NSDictionary *properties = (__bridge_transfer NSDictionary *)CGImageSourceCopyPropertiesAtIndex(imageSource, idx, NULL);
-        calculatedDuration += [[[properties objectForKey:(__bridge NSString *)kCGImagePropertyGIFDictionary] objectForKey:(__bridge NSString *)kCGImagePropertyGIFDelayTime] doubleValue];
+        NSDictionary *gifProperties = properties[(__bridge NSString *)kCGImagePropertyGIFDictionary];
+
+        NSNumber *delay = gifProperties[(__bridge NSString *)kCGImagePropertyGIFUnclampedDelayTime];
+        if (!delay) {
+            delay = gifProperties[(__bridge NSString *)kCGImagePropertyGIFDelayTime];
+        }
+
+        calculatedDuration += [delay doubleValue];
 
         [mutableImages addObject:[UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp]];
 
