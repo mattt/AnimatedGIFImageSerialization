@@ -67,13 +67,6 @@ __attribute__((overloadable)) UIImage * UIImageWithAnimatedGIFData(NSData *data,
             return [UIImage animatedImageWithImages:mutableImages duration:(duration <= 0.0f ? calculatedDuration : duration)];
         }
     }
-    _error: {
-        if (error) {
-            *error = [[NSError alloc] initWithDomain:AnimatedGIFImageErrorDomain code:-1 userInfo:userInfo];
-        }
-
-        return nil;
-    }
 }
 
 static BOOL AnimatedGifDataIsValid(NSData *data) {
