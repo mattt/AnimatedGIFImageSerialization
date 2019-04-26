@@ -60,7 +60,7 @@ __attribute__((overloadable)) UIImage * _Nullable UIImageWithAnimatedGIFData(NSD
     size_t numberOfFrames = CGImageSourceGetCount(imageSource);
     NSMutableArray<UIImage *> *mutableImages = [NSMutableArray arrayWithCapacity:numberOfFrames];
 
-    NSUInteger calculatedDuration = 0.0f;
+    NSTimeInterval calculatedDuration = 0.0;
     for (size_t idx = 0; idx < numberOfFrames; idx++) {
         CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, idx, (__bridge CFDictionaryRef)mutableOptions);
 
