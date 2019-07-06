@@ -1,5 +1,8 @@
 # AnimatedGIFImageSerialization
 
+> This library is no longer maintained. 
+> In iOS 13+ and macOS 10.15+, use [`CGAnimateImageAtURLWithBlock`](https://developer.apple.com/documentation/imageio/3333271-cganimateimageaturlwithblock) instead.
+
 `AnimatedGIFImageSerialization` decodes an `UIImage` from
 [Animated GIFs](http://en.wikipedia.org/wiki/Graphics_Interchange_Format),
 following the API conventions of Foundation's `NSJSONSerialization` class.
